@@ -22,7 +22,7 @@ export default class Contracts extends Component<any, State> {
     this.state = {
       apiNetwork: `${baseAPI}?apikey=${apiKey}&module=contract&action=getabi&address=`,
       contracts: 1,
-      network
+      network,
     }
   }
 
@@ -31,7 +31,7 @@ export default class Contracts extends Component<any, State> {
     const network = getLastUsedNetwork()
 
     return {
-      network: searchParams.get('network') || network
+      network: searchParams.get('network') || network,
     }
   }
 
@@ -51,7 +51,7 @@ export default class Contracts extends Component<any, State> {
 
     this.setState({
       apiNetwork: `${baseAPI}?apikey=${apiKey}&module=contract&action=getabi&address=`,
-      network: newNetwork
+      network: newNetwork,
     })
   }
 

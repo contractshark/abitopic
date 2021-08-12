@@ -5,7 +5,7 @@ import { findABIForProxy, sanitizeABI } from '../../lib/utils'
 import {
   saveLastUsedContract,
   getLastUsedContract,
-  LastUsedContract
+  LastUsedContract,
 } from '../../lib/localStorage'
 import Editor from '../../components/Editor' // @TODO: components as paths
 import Loader from '../../components/Loader' // @TODO: components as paths
@@ -20,7 +20,7 @@ import './Contract.css'
 
 const TABS = {
   FUNCTIONS: 'Functions',
-  EVENTS: 'Events'
+  EVENTS: 'Events',
 }
 
 export default class Contract extends Component<Props, State> {
@@ -45,7 +45,7 @@ export default class Contract extends Component<Props, State> {
       blockNumber: 'latest',
       contractName: '',
       address,
-      isProxy
+      isProxy,
     }
   }
 
@@ -73,7 +73,7 @@ export default class Contract extends Component<Props, State> {
       isProxy: searchParams.get('isProxy')
         ? !!searchParams.get('isProxy')
         : !!isProxy,
-      abi
+      abi,
     }
   }
 
@@ -83,7 +83,10 @@ export default class Contract extends Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.network !== this.props.network || nextProps.apiNetwork !== this.props.apiNetwork) {
+    if (
+      nextProps.network !== this.props.network ||
+      nextProps.apiNetwork !== this.props.apiNetwork
+    ) {
       this.handleNetworkChange(nextProps.network, nextProps.apiNetwork)
     }
   }
@@ -98,7 +101,7 @@ export default class Contract extends Component<Props, State> {
   getByAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     this.setState({
-      address: e.currentTarget.value
+      address: e.currentTarget.value,
     })
     this.getAddress(e.currentTarget.value, this.state.isProxy)
     this.saveAction({ address: e.currentTarget.value })
@@ -108,10 +111,15 @@ export default class Contract extends Component<Props, State> {
     if (address) {
       let abi
       try {
-        const res = await fetch(`${api ? api : this.props.apiNetwork}${address}`)
+        const res = await fetch(
+          `${api ? api : this.props.apiNetwork}${address}`
+        )
         abi = await res.json()
       } catch (e) {
-          return this.setState({ error: 'Error fetching the abi', contractName: '' })
+        return this.setState({
+          error: 'Error fetching the abi',
+          contractName: '',
+        })
       }
 
       if (abi.result === 'Contract source code not verified') {
@@ -149,9 +157,14 @@ export default class Contract extends Component<Props, State> {
     this.saveAction({ isProxy: !isProxy })
   }
 
-  getAddress = async (address: string, isProxy: boolean, network?: string, api?: string) => {
+  getAddress = async (
+    address: string,
+    isProxy: boolean,
+    network?: string,
+    api?: string
+  ) => {
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
 
     if (isProxy) {
@@ -170,7 +183,7 @@ export default class Contract extends Component<Props, State> {
                 {'@nachomazzara'}
               </a>
             </p>
-          )
+          ),
         })
       }
     } else {
@@ -178,7 +191,7 @@ export default class Contract extends Component<Props, State> {
     }
 
     this.setState({
-      isLoading: false
+      isLoading: false,
     })
     this.saveAction({ address, isProxy })
 
@@ -229,10 +242,13 @@ export default class Contract extends Component<Props, State> {
               name,
               selector,
               original,
-              isConstant: method.constant || method.stateMutability === 'pure' || method.stateMutability === 'view',
+              isConstant:
+                method.constant ||
+                method.stateMutability === 'pure' ||
+                method.stateMutability === 'view',
               inputs: method.inputs,
               outputs: method.outputs,
-              isPayable: method.payable || method.stateMutability === 'payable'
+              isPayable: method.payable || method.stateMutability === 'payable',
             })
             break
           }
@@ -255,7 +271,7 @@ export default class Contract extends Component<Props, State> {
         functions: functions.sort((a: Func, b: Func) =>
           a.name.localeCompare(b.name)
         ),
-        error: null
+        error: null,
       })
     } catch (e) {
       this.setState({ error: e.message, abi })
@@ -272,7 +288,7 @@ export default class Contract extends Component<Props, State> {
 
     this.setState({
       events: null,
-      error: null
+      error: null,
     })
 
     this.getAddress(address, isProxy, network, api)
@@ -327,7 +343,7 @@ export default class Contract extends Component<Props, State> {
   handleBlockNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       blockNumber:
-        e.currentTarget.value.length > 0 ? e.currentTarget.value : 'latest'
+        e.currentTarget.value.length > 0 ? e.currentTarget.value : 'latest',
     })
   }
 
@@ -352,12 +368,10 @@ export default class Contract extends Component<Props, State> {
       isLoading,
       search,
       blockNumber,
-      contractName
+      contractName,
     } = this.state
     const abiStr = abi
-      ? JSON.stringify(abi)
-          .replace(/\\"/g, '"')
-          .slice(1, -1)
+      ? JSON.stringify(abi).replace(/\\"/g, '"').slice(1, -1)
       : ''
 
     return (

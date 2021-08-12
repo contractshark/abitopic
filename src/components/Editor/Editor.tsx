@@ -29,7 +29,7 @@ export default class Editor extends PureComponent<Props, State> {
       isRunning: false,
       output: null,
       error: null,
-      copyText: 'Copy'
+      copyText: 'Copy',
     }
   }
 
@@ -189,7 +189,7 @@ export default class Editor extends PureComponent<Props, State> {
                   automaticLayout: true,
                   lineNumbers: 'off',
                   minimap: { enabled: false },
-                  fontSize: 11
+                  fontSize: 11,
                 }}
               />
             </div>
@@ -219,7 +219,7 @@ export default class Editor extends PureComponent<Props, State> {
                   lineNumbers: 'off',
                   minimap: { enabled: false },
                   fontSize: 10,
-                  folding: false
+                  folding: false,
                 }}
               />
             </div>
@@ -234,7 +234,7 @@ export default class Editor extends PureComponent<Props, State> {
         <textarea
           readOnly={true}
           className="no-visible"
-          ref={textarea => {
+          ref={(textarea) => {
             if (textarea) {
               this.textarea = textarea
             }

@@ -4,18 +4,17 @@ import { Contract } from 'web3-eth-contract/types'
 export const TOPICS_FOR_PROXYS = [
   {
     topic: '0xe74baeef5988edac1159d9177ca52f0f3d68f624a1996f77467eb3ebfb316537',
-    indexed: 1
+    indexed: 1,
   },
   {
     topic: '0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b',
-    dataIndex: 1
+    dataIndex: 1,
   },
   {
     topic: '0x4d72fe0577a3a3f7da968d7b892779dde102519c25527b29cf7054f245c791b9', // Aragon's Initialization
-    indexed: 2
-  }
+    indexed: 2,
+  },
 ]
-
 
 export const CHAINS = {
   ETHEREUM_MAINNET: { value: 'mainnet', label: 'Ethereum Mainnet', id: 1 },
@@ -27,15 +26,13 @@ export const CHAINS = {
   BSC_TESTNET: {
     value: 'bsc-testnet',
     label: 'Binance Smart Chain Testnet',
-    id: 97
+    id: 97,
   },
   MATIC_MAINNET: { value: 'matic', label: 'Matic Mainnet', id: 137 },
-  MATIC_MUMBAI: { value: 'mumbai', label: 'Matic Mumbai', id: 80001 }
+  MATIC_MUMBAI: { value: 'mumbai', label: 'Matic Mumbai', id: 80001 },
 }
 
-
 export const CUSTOM_NETWORK = 'custom'
-
 
 function isEthereumChain(network: string) {
   return (
@@ -49,12 +46,15 @@ function isEthereumChain(network: string) {
 
 function isMaticChain(network: string) {
   return (
-    network === CHAINS.MATIC_MAINNET.value || network === CHAINS.MATIC_MUMBAI.value
+    network === CHAINS.MATIC_MAINNET.value ||
+    network === CHAINS.MATIC_MUMBAI.value
   )
 }
 
 function isBSCChain(network: string) {
-  return network === CHAINS.BSC_MAINNET.value || network === CHAINS.BSC_TESTNET.value
+  return (
+    network === CHAINS.BSC_MAINNET.value || network === CHAINS.BSC_TESTNET.value
+  )
 }
 
 export function getAPIKey(network: string) {
@@ -75,18 +75,21 @@ export function getAPIKey(network: string) {
 
 export function getAPI(network: string): string {
   if (isEthereumChain(network)) {
-    return `https://api${network !== 'mainnet' ? `-${network}` : ''
-      }.etherscan.io/api`
+    return `https://api${
+      network !== 'mainnet' ? `-${network}` : ''
+    }.etherscan.io/api`
   }
 
   if (isBSCChain(network)) {
-    return `https://api${network === CHAINS.BSC_TESTNET.value ? '-testnet' : ''
-      }.bscscan.com/api`
+    return `https://api${
+      network === CHAINS.BSC_TESTNET.value ? '-testnet' : ''
+    }.bscscan.com/api`
   }
 
   if (isMaticChain(network)) {
-    return `https://api${network === CHAINS.MATIC_MUMBAI.value ? '-testnet' : ''
-      }.polygonscan.com/api`
+    return `https://api${
+      network === CHAINS.MATIC_MUMBAI.value ? '-testnet' : ''
+    }.polygonscan.com/api`
   }
 
   console.warn(`Could not find any API for the chain: ${network}`)
@@ -96,18 +99,21 @@ export function getAPI(network: string): string {
 
 export function getTxLink(network: string): string {
   if (isEthereumChain(network)) {
-    return `https://${network !== 'mainnet' ? `${network}` : ''
-      }.etherscan.io/tx`
+    return `https://${
+      network !== 'mainnet' ? `${network}` : ''
+    }.etherscan.io/tx`
   }
 
   if (isBSCChain(network)) {
-    return `https://${network === CHAINS.BSC_TESTNET.value ? 'testnet' : ''
-      }.bscscan.com/tx`
+    return `https://${
+      network === CHAINS.BSC_TESTNET.value ? 'testnet' : ''
+    }.bscscan.com/tx`
   }
 
   if (isMaticChain(network)) {
-    return `https://${network === CHAINS.MATIC_MUMBAI.value ? 'testnet' : ''
-      }.polygonscan.com/tx`
+    return `https://${
+      network === CHAINS.MATIC_MUMBAI.value ? 'testnet' : ''
+    }.polygonscan.com/tx`
   }
 
   console.warn(`Could not find any API for the chain: ${network}`)
@@ -181,7 +187,7 @@ export function sanitizeABI(abi: string) {
     .replace(/\s+/g, '')
     .replace(
       /(\w+:)|(\w+ :)/g,
-      matchedStr => `"${matchedStr.substring(0, matchedStr.length - 1)}":`
+      (matchedStr) => `"${matchedStr.substring(0, matchedStr.length - 1)}":`
     )
 }
 
@@ -190,7 +196,7 @@ export function getChains() {
 }
 
 export function getNetworkNameById(id: number): string {
-  const chain = getChains().find(chain => chain.id === id)
+  const chain = getChains().find((chain) => chain.id === id)
   return chain ? chain.value : ''
 }
 
@@ -201,33 +207,34 @@ export function isOS() {
 // Replace `methods: any` to `{ methodName: (params: types) Promise<any>}`
 export function typeContractMethods(editorTypes: string, contract: Contract) {
   const methodTypes = `methods: {
-    ${contract!.options.jsonInterface.map((method: any) => {
-    let inputs = ''
+    ${contract!.options.jsonInterface
+      .map((method: any) => {
+        let inputs = ''
 
-    method.inputs.forEach((input: any, index: number) => {
-      if (index > 0) {
-        inputs += ', '
-      }
+        method.inputs.forEach((input: any, index: number) => {
+          if (index > 0) {
+            inputs += ', '
+          }
 
-      inputs += input.name
-        ? input.name
-        : method.inputs.length > 1
-          ? `${input.type}_${index}`
-          : input.type
+          inputs += input.name
+            ? input.name
+            : method.inputs.length > 1
+            ? `${input.type}_${index}`
+            : input.type
 
-      if (input.type.indexOf('int') !== -1) {
-        inputs += ': number'
-      } else {
-        inputs += ': string'
-      }
+          if (input.type.indexOf('int') !== -1) {
+            inputs += ': number'
+          } else {
+            inputs += ': string'
+          }
 
-      if (input.type.indexOf('[]') !== -1) {
-        inputs += `[]`
-      }
-    })
+          if (input.type.indexOf('[]') !== -1) {
+            inputs += `[]`
+          }
+        })
 
-    return `${method.name}: (${inputs}) => any`
-  })
+        return `${method.name}: (${inputs}) => any`
+      })
       .join('\n')}
   }`
 

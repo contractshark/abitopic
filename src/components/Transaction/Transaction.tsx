@@ -26,11 +26,7 @@ export default class Transaction extends PureComponent<
   }
 
   toArrayInput = (input: string) =>
-    input
-      .replace(/ /g, '')
-      .replace('[', '')
-      .replace(']', '')
-      .split(',')
+    input.replace(/ /g, '').replace('[', '').replace(']', '').split(',')
 
   showTxData = (event: React.FormEvent<any>) => {
     event.preventDefault()
@@ -38,12 +34,12 @@ export default class Transaction extends PureComponent<
       const { data } = this.getData(event)
       this.setState({
         data: data,
-        error: null
+        error: null,
       })
     } catch (e) {
       this.setState({
         data: '',
-        error: e.message
+        error: e.message,
       })
     }
   }
@@ -62,7 +58,7 @@ export default class Transaction extends PureComponent<
         to: contract.options.address,
         from,
         data,
-        value
+        value,
       }
 
       if (!(await this.isSameNetwork())) {
@@ -78,33 +74,36 @@ export default class Transaction extends PureComponent<
       if (isConstant) {
         this.setState({
           data: this.getCall(res as string),
-          error: null
+          error: null,
         })
       } else {
         this.setState({
           link: this.getLink(res as TransactionReceipt),
-          error: null
+          error: null,
         })
       }
     } catch (e) {
       this.setState({
         data: '',
         link: '',
-        error: e.message
+        error: e.message,
       })
     }
   }
 
   isSameNetwork = async (): Promise<boolean> => {
     const netId = await this.web3.eth.net.getId()
-    return this.network === CUSTOM_NETWORK || this.network === getNetworkNameById(netId)
+    return (
+      this.network === CUSTOM_NETWORK ||
+      this.network === getNetworkNameById(netId)
+    )
   }
 
   getCall = (data: string): string => {
     const { outputs } = this.props
 
     const decodedData = this.web3.eth.abi.decodeParameters(
-      outputs.map(input => input.type),
+      outputs.map((input) => input.type),
       data
     )
 

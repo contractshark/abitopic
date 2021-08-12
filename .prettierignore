@@ -1,0 +1,11 @@
+public/
+build/
+*.html
+*.css
+*.scss
+*.min.js
+*.xhtml
+*.xml
+*.htm
+*.d.ts
+
